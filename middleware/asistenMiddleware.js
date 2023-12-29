@@ -6,7 +6,7 @@ asistenMiddleware.validationInput = (req, res, next) => {
     const jenisKelamin = req.body.jk.toLowerCase()
 
     //validasi field tidak boleh kosong
-    if (!nama || !alamat || !no_hp || !jk || !user) {
+    if (!nama || !alamat || !no_hp || !jk) {
         return res.status(400).json({
             message: "Field tidak boleh kosong"
         })

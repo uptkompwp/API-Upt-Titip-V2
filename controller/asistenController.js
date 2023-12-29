@@ -1,30 +1,34 @@
 const asistenController = {}
 const { Asisten, User } = require('../models')
-const asisten = require('../models/asisten')
+const jwt = require('jsonwebtoken')
+const dotenv = require('dotenv')
+dotenv.config()
+
+const getToken = (token) => {
+    try {
+        const decoded = jwt.verify(token, process.env.PRIVATE_KEY);
+        return decoded.id || null; 
+    } catch (error) {
+        console.error('Error decoding token:', error);
+        return null;
+    }
+}
 
 
 asistenController.create = async (req, res) => {
-    const { nama, alamat, no_hp, jk, user } = req.body
 
+    const authorizationHeader = req.header('Authorization');
+    const token = authorizationHeader.replace('Bearer ', '');
+    const { nama, alamat, no_hp, jk} = req.body
+
+    const idUser = getToken(token)
     try {
-        const getUser = await User.findOne({
-            where: {
-                id: user
-            }
-        })
-
-        if (!getUser) {
-            return res.status(404).json({
-                message: "Id user tidak ditemukan !"
-            })
-        }
-
         const createData = await Asisten.create({
             nama,
             alamat,
             no_hp,
             jk,
-            user
+            user: idUser
         })
 
         return res.status(200).json({
@@ -61,27 +65,6 @@ asistenController.getAll = async (req, res) => {
         })
     }
 }
-
-// asistenController.getById = async (req, res) => {
-//     const { id } = req.params
-
-//     try {
-//         const getAstById = await Asisten.findOne({
-//             where: {
-//                 id: id
-//             }
-//         })
-
-//         return res.status(200).json({
-//             message: "Data berhasil ditampilkan !",
-//             data: getAstById
-//         })
-//     } catch (error) {
-//         return res.status(500).json({
-//             message: error
-//         })
-//     }
-// }
 
 asistenController.getAstByParam = async (req, res) => {
     const { parameter, value } = req.params

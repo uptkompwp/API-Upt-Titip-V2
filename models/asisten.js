@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       
+      //table user sebagai parent untuk asisten
       Asisten.belongsTo(models.User, {
         foreignKey: "user",
         as: "userData"
