@@ -1,6 +1,6 @@
 const userController = {}
 const { Op } = require('sequelize')
-const { User, Role, Asisten } = require('../models')
+const { User, Role, Asisten, Mitra } = require('../models')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv')
@@ -30,9 +30,20 @@ userController.login = async (req, res) => {
             }
         })
 
+        const findMitra = await Mitra.findOne({
+            where: {
+                user: findUser.id
+            }
+        })
+
         let asistenData
         if (findAst) {
             asistenData = findUser.id
+        }
+
+        let mitraData
+        if (findMitra) {
+            mitraData = findMitra.id
         }
 
         const comparePassword = await bcrypt.compare(password, findUser.password)
@@ -47,6 +58,10 @@ userController.login = async (req, res) => {
 
             if (asistenData !== null) {
                 payloadToken.asistenData = asistenData
+            }
+
+            if (mitraData !== null) {
+                payloadToken.mitraData = mitraData
             }
 
             const token = jwt.sign(payloadToken, process.env.PRIVATE_KEY, {

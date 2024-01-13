@@ -1,5 +1,5 @@
-const asistenController = {}
-const { Asisten, User } = require('../models')
+const mitraController = {}
+const { Mitra} = require('../models')
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
 dotenv.config()
@@ -14,16 +14,16 @@ const getToken = (token) => {
     }
 }
 
-asistenController.create = async (req, res) => {
+mitraController.create = async (req, res) => {
 
     const authorizationHeader = req.header('Authorization');
     const token = authorizationHeader.replace('Bearer ', '');
-    const { nama, alamat, no_hp, jk } = req.body
+    const { nama_mitra, alamat, no_hp} = req.body
 
     const idUser = getToken(token)
     try {
 
-        const existingUser = await Asisten.findOne({
+        const existingUser = await Mitra.findOne({
             where: {
                 user: idUser
             }
@@ -31,15 +31,14 @@ asistenController.create = async (req, res) => {
 
         if (existingUser) {
             return res.status(400).json({
-                message: "Asisten sudah terdaftar !"
+                message: "Mitra sudah terdaftar !"
             })
         }
 
-        const createData = await Asisten.create({
-            nama,
+        const createData = await Mitra.create({
+            nama_mitra,
             alamat,
             no_hp,
-            jk,
             user: idUser
         })
 
@@ -55,20 +54,20 @@ asistenController.create = async (req, res) => {
     }
 }
 
-asistenController.getAll = async (req, res) => {
+mitraController.getAll = async (req, res) => {
 
     try {
-        const getAst = await Asisten.findAll({
+        const getMitra = await Mitra.findAll(
 
-            include: [{
-                model: User,
-                as: "userData"
-            }]
-        })
+            // include: [{
+            //     model: User,
+            //     as: "userData"
+            // }]
+        )
 
         return res.status(200).json({
             message: "Data berhasil ditampilkan !",
-            data: getAst
+            data: getMitra
         })
     } catch (error) {
 
@@ -78,18 +77,18 @@ asistenController.getAll = async (req, res) => {
     }
 }
 
-asistenController.getAstByParam = async (req, res) => {
+mitraController.getMitraByParam = async (req, res) => {
     const { parameter, value } = req.params
 
     try {
         let whereClause = {}
         whereClause[parameter] = value
 
-        const getAstByParam = await Asisten.findAll({
+        const getMitraByParam = await Mitra.findAll({
             where: whereClause
         })
 
-        if (getAstByParam.length === 0) {
+        if (getMitraByParam.length === 0) {
             return res.status(404).json({
                 message: `Data dengan ${parameter} '${value}' tidak ditemukan`
             });
@@ -97,7 +96,7 @@ asistenController.getAstByParam = async (req, res) => {
 
         return res.status(200).json({
             message: `Data berhasil ditampilkan berdasarkan ${parameter}`,
-            data: getAstByParam
+            data: getMitraByParam
         });
     } catch (error) {
 
@@ -107,9 +106,9 @@ asistenController.getAstByParam = async (req, res) => {
     }
 }
 
-asistenController.update = async (req, res) => {
+mitraController.update = async (req, res) => {
     const { id } = req.params
-    const { nama, alamat, no_hp, jk } = req.body
+    const { nama_mitra, alamat, no_hp} = req.body
 
     const authorizationHeader = req.header('Authorization');
     const token = authorizationHeader.replace('Bearer ', '');
@@ -118,7 +117,7 @@ asistenController.update = async (req, res) => {
 
     try {
 
-        const getData = await Asisten.findAll({
+        const getData = await Mitra.findAll({
             where: {
                 user: idUser
             }
@@ -130,18 +129,17 @@ asistenController.update = async (req, res) => {
             })
         }
 
-        const astById = getData.find(data => data.id == id);
-        if (!astById) {
+        const mitraById = getData.find(data => data.id == id);
+        if (!mitraById) {
             return res.status(404).json({
-                message: 'Asisten dengan user tersebut tidak ditemukan'
+                message: 'Mitra dengan user tersebut tidak ditemukan'
             });
         }
 
-        const updateData = await Asisten.update({
-            nama,
+        const updateData = await Mitra.update({
+            nama_mitra,
             alamat,
             no_hp,
-            jk,
             user: idUser
         }, {
             where: {
@@ -160,24 +158,24 @@ asistenController.update = async (req, res) => {
     }
 }
 
-asistenController.deleteByParam = async (req, res) => {
+mitraController.deleteByParam = async (req, res) => {
     const { parameter, value } = req.params
 
     try {
         let whereClause = {}
         whereClause[parameter] = value
 
-        const getAstByParam = await Asisten.findAll({
+        const getMitraByParam = await Mitra.findAll({
             where: whereClause
         })
 
-        if (getAstByParam.length === 0) {
+        if (getMitraByParam.length === 0) {
             return res.status(404).json({
                 message: `Data dengan ${parameter} '${value}' tidak ditemukan`
             });
         }
 
-        const deleteData = await Asisten.destroy({
+        const deleteData = await Mitra.destroy({
             where: whereClause
         })
 
@@ -192,5 +190,5 @@ asistenController.deleteByParam = async (req, res) => {
     }
 }
 
-module.exports = asistenController
+module.exports = mitraController
 

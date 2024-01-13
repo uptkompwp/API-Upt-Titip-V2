@@ -11,6 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Mitra.belongsTo(models.User, {
+        foreignKey: "user"
+      })
+
+      Mitra.hasMany(models.Menu, {
+        foreignKey: "mitra",
+        as: "menuData"
+      })
     }
   }
   Mitra.init({

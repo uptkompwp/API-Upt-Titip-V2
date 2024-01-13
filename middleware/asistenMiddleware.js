@@ -2,7 +2,7 @@ const asistenMiddleware = {}
 
 
 asistenMiddleware.validationInput = (req, res, next) => {
-    const { nama, alamat, no_hp, jk, user } = req.body
+    const { nama, alamat, no_hp, jk } = req.body
     const jenisKelamin = req.body.jk.toLowerCase()
 
     //validasi field tidak boleh kosong

@@ -17,6 +17,12 @@ module.exports = (sequelize, DataTypes) => {
         as: "Asisten"
       })
 
+      //1 user 1 mitra
+      User.hasOne(models.Mitra, {
+        foreignKey: "user",
+        as: "Mitra"
+      })
+
       User.belongsTo(models.Role, {
         foreignKey: "role",
         as: "Role"

@@ -10,7 +10,11 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+
+      //table mitra sebagai parent untuk menu
+      Menu.belongsTo(models.Mitra, {
+        foreignKey: "mitra"
+      })
     }
   }
   Menu.init({
